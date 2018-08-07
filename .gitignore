@@ -4,6 +4,7 @@
 */bin/*
 */target/*
 */test-classes/*
+*.settings
 
 # Log file
 *.log
