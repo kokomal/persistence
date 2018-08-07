@@ -26,7 +26,7 @@
     delete from t_user
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="yuanjun.chen.dao.mybatis.model.User" >
+  <insert id="insert" keyProperty="userId" useGeneratedKeys="true" parameterType="yuanjun.chen.dao.mybatis.model.User" >
     insert into t_user (user_id, user_name, password, 
       phone)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 

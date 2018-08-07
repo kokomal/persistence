@@ -12,10 +12,8 @@ package yuanjun.chen.dao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 import yuanjun.chen.PersistenceApplication;
 import yuanjun.chen.dao.mybatis.mapper.UserMapper;
 import yuanjun.chen.dao.mybatis.model.User;
@@ -38,6 +36,7 @@ public class TestUserDao {
         u.setPassword("1234");
         u.setPhone("12345678900");
         u.setUserName("灭霸");
-        userMapper.insert(u);
+        int aff = userMapper.insert(u); // 回写需要在mapper里面设置
+        System.out.println("aff=" + aff + " and u.id = " + u.getUserId());
     }
 }
