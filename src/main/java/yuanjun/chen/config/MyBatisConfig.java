@@ -30,22 +30,18 @@ import com.github.pagehelper.PageHelper;
 @Configuration
 @EnableTransactionManagement
 public class MyBatisConfig implements TransactionManagementConfigurer {
-	
-	@Primary
-	@Bean (name="biz-db") 
-    @ConfigurationProperties(prefix = "spring.datasource")  
-    public DataSource druidDataSource() {  
-        DruidDataSource druidDataSource = new DruidDataSource();  
-        return druidDataSource;  
-    }  
+    @Primary
+    @Bean(name = "biz-db")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource druidDataSource() {
+        return new DruidDataSource();
+    }
 
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactoryBean() {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(druidDataSource());
-        //bean.setTypeAliasesPackage("tk.mybatis.springboot.model");
- 
-        //分页插件
+        // 分页插件
         PageHelper pageHelper = new PageHelper();
         Properties properties = new Properties();
         properties.setProperty("reasonable", "true");
@@ -54,13 +50,14 @@ public class MyBatisConfig implements TransactionManagementConfigurer {
         properties.setProperty("params", "count=countSql");
         pageHelper.setProperties(properties);
 
-        //添加插件
-        bean.setPlugins(new Interceptor[]{pageHelper});
+        // 添加插件
+        bean.setPlugins(new Interceptor[] {pageHelper});
 
-        //添加XML目录
+        // 添加XML目录
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
             bean.setMapperLocations(resolver.getResources("classpath:yuanjun/chen/dao/mybatis/mapping/*.xml"));
+            // bean.setTypeAliasesPackage("yuanjun.chen");
             return bean.getObject();
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,11 +75,10 @@ public class MyBatisConfig implements TransactionManagementConfigurer {
     public PlatformTransactionManager annotationDrivenTransactionManager() {
         return new DataSourceTransactionManager(druidDataSource());
     }
-    
-    // 按照BeanId来拦截配置 用来bean的监控  
-    @Bean(value = "druid-stat-interceptor")  
-    public DruidStatInterceptor DruidStatInterceptor() {  
-        DruidStatInterceptor druidStatInterceptor = new DruidStatInterceptor();  
-        return druidStatInterceptor;  
-    }  
+
+    /** 按照BeanId来拦截配置 用来bean的监控. */
+    @Bean("druid-stat-interceptor")
+    public DruidStatInterceptor DruidStatInterceptor() {
+        return new DruidStatInterceptor();
+    }
 }

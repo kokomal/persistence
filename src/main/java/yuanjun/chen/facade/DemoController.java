@@ -27,7 +27,7 @@ import yuanjun.chen.dao.mybatis.mapper.UserMapper;
 public class DemoController {
     @Autowired
     UserMapper userMapper;
-    
+
     @RequestMapping(value = "/zz", method = RequestMethod.GET)
     public ResponseEntity<String> index() {
         return ResponseEntity.badRequest().body("haha");
