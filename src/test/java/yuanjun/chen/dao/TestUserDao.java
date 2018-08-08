@@ -9,11 +9,13 @@
  */
 package yuanjun.chen.dao;
 
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import com.alibaba.fastjson.JSONObject;
 import yuanjun.chen.PersistenceApplication;
 import yuanjun.chen.dao.mybatis.mapper.UserMapper;
 import yuanjun.chen.dao.mybatis.model.User;
@@ -31,12 +33,41 @@ public class TestUserDao {
     UserMapper userMapper;
 
     @Test
-    public void insertTest() {
+    public void insertTest1() {
         User user = new User();
         user.setPassword("1234");
         user.setPhone("12345678900");
         user.setUserName("灭霸");
         int aff = userMapper.insert(user); // 回写需要在mapper里面设置
         System.out.println("aff=" + aff + " and userId = " + user.getUserId());
+    }
+
+    @Test
+    public void insertTest2() {
+        User user = new User();
+        user.setPassword("4321");
+        user.setPhone("7675475477");
+        user.setUserName("卡魔拉");
+        int aff = userMapper.insert(user); // 回写需要在mapper里面设置
+        System.out.println("aff=" + aff + " and userId = " + user.getUserId());
+    }
+
+    @Test
+    public void selectTest() {
+        List<User> users = userMapper.selectAllUser();
+        System.out.println(JSONObject.toJSONString(users));
+    }
+
+    @Test
+    public void deleteTest() {
+        List<User> users = userMapper.selectAllUser();
+        System.out.println(JSONObject.toJSONString(users));
+        for (User user : users) {
+            System.out.print("deleting " + user.getUserName());
+            int aff = userMapper.deleteByPrimaryKey(user.getUserId());
+            if (aff > 0) {
+                System.out.println(" success!");
+            }
+        }
     }
 }
