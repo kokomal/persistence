@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import yuanjun.chen.PersistenceApplication;
 import yuanjun.chen.dao.mybatis.mapper.UserMapper;
 import yuanjun.chen.dao.mybatis.model.User;
+import yuanjun.chen.service.InsertUserService;
 
 /**
  * @ClassName: TestUserDao
@@ -69,5 +70,39 @@ public class TestUserDao {
                 System.out.println(" success!");
             }
         }
+    }
+    
+    @Autowired
+    private InsertUserService insertUserService;
+    
+    @Test
+    public void testTransaction() throws Exception {
+        User user1 = getMeCaptainAmerica("美国队长1");
+        try {
+            insertUserService.insertUserDoomFail1(user1); // 抛异常，不回滚
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        User user2 = getMeCaptainAmerica("美国队长2");
+        try {
+            insertUserService.insertUserDoomFail2(user2); // 抛异常，回滚
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        User user3 = getMeCaptainAmerica("美国队长3");
+        try {
+            insertUserService.insertUserDoomFail3(user3); // 抛异常，回滚
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 最终只有1个美国队长1
+    }
+
+    private static User getMeCaptainAmerica(String str) {
+        User user = new User();
+        user.setPassword("9999");
+        user.setPhone("123123123");
+        user.setUserName(str);
+        return user;
     }
 }

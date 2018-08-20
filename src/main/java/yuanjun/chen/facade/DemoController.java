@@ -35,7 +35,7 @@ public class DemoController {
     UserMapper userMapper;
 
     @RequestMapping(value = "/zz", method = RequestMethod.GET)
-    public ResponseEntity<String> index() {
+    public ResponseEntity<String> hellozz() {
         return ResponseEntity.badRequest().body("haha");
     }
 
