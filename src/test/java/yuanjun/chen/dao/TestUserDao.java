@@ -10,6 +10,7 @@
 package yuanjun.chen.dao;
 
 import java.util.List;
+import java.util.UUID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,8 +101,8 @@ public class TestUserDao {
 
     private static User getMeCaptainAmerica(String str) {
         User user = new User();
-        user.setPassword("9999");
-        user.setPhone("123123123");
+        user.setPassword(UUID.randomUUID().toString());
+        user.setPhone(UUID.randomUUID().toString());
         user.setUserName(str);
         return user;
     }
