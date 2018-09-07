@@ -50,19 +50,18 @@ public class DemoController {
         logger.info("vvv");
         return JSONObject.toJSONString(userMapper.selectAllUser());
     }
-    
+
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     @ResponseBody
     public String hello(@RequestParam String name) {
         return "Hello " + name;
     }
-    
-    //注入SeriesDataEventQueueHelper消息生产者
+
+    // 注入SeriesDataEventQueueHelper消息生产者
     @Autowired
     private SeriesDataEventQueueHelper seriesDataEventQueueHelper;
 
-
-   @RequestMapping(value = "/data", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/data", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public DataResponseVo<String> receiverDeviceData(@RequestBody String deviceData) {
         long startTime1 = System.currentTimeMillis();
 
