@@ -21,8 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Aspect
 @Component
 public class LogAspect {
-    @Pointcut("execution(public * yuanjun.chen.facade..*.hello(..))")
-    //@Pointcut("execution(public * com.didispace.web..*.*(..))")
+    @Pointcut("execution(public * yuanjun.chen.facade..*.hello*(..))")
     public void webLog() {}
 
     @Before("webLog()")
