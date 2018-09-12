@@ -19,6 +19,6 @@ public class SeriesData {
 
     @Override
     public String toString() {
-        return "SeriesData{" + "deviceInfoStr='" + deviceInfoStr + '\'' + '}';
+        return "SeriesData{" + "deviceInfoStr='" + deviceInfoStr + '}';
     }
 }
