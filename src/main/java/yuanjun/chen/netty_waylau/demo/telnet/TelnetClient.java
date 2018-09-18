@@ -10,6 +10,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
 /**
  * Simplistic telnet client.
@@ -24,7 +25,7 @@ public final class TelnetClient {
         // Configure SSL.
         final SslContext sslCtx;
         if (SSL) {
-            sslCtx = SslContextBuilder.forClient().build();
+            sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
         } else {
             sslCtx = null;
         }
@@ -45,10 +46,8 @@ public final class TelnetClient {
                 if (line == null) {
                     break;
                 }
-
                 // Sends the received line to the server.
                 lastWriteFuture = ch.writeAndFlush(line + "\r\n");
-
                 // If user typed the 'bye' command, wait until the server closes
                 // the connection.
                 if ("bye".equals(line.toLowerCase())) {
@@ -56,7 +55,6 @@ public final class TelnetClient {
                     break;
                 }
             }
-
             // Wait until all messages are flushed before closing the channel.
             if (lastWriteFuture != null) {
                 lastWriteFuture.sync();

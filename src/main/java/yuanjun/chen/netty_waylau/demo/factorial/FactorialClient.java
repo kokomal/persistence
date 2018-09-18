@@ -7,10 +7,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
 /**
- * Sends a sequence of integers to a {@link FactorialServer} to calculate
- * the factorial of the specified integer.
+ * Sends a sequence of integers to a {@link FactorialServer} to calculate the factorial of the
+ * specified integer.
  */
 public final class FactorialClient {
     static final boolean SSL = System.getProperty("ssl") != null;
@@ -22,8 +23,8 @@ public final class FactorialClient {
         // Configure SSL.
         SslContext sslCtx;
         if (SSL) {
-            //sslCtx = SslContext.newClientContext(InsecureTrustManagerFactory.INSTANCE);
-            sslCtx = SslContextBuilder.forClient().build();
+            // sslCtx = SslContext.newClientContext(InsecureTrustManagerFactory.INSTANCE);
+            sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
         } else {
             sslCtx = null;
         }
@@ -31,17 +32,12 @@ public final class FactorialClient {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
-            b.group(group)
-             .channel(NioSocketChannel.class)
-             .handler(new FactorialClientInitializer(sslCtx));
+            b.group(group).channel(NioSocketChannel.class).handler(new FactorialClientInitializer(sslCtx));
 
             // Make a new connection.
             ChannelFuture f = b.connect(HOST, PORT).sync();
-
             // Get the handler instance to retrieve the answer.
-            FactorialClientHandler handler =
-                (FactorialClientHandler) f.channel().pipeline().last();
-
+            FactorialClientHandler handler = (FactorialClientHandler) f.channel().pipeline().last();
             // Print out the answer.
             System.err.format("Factorial of %,d is: %,d", COUNT, handler.getFactorial());
         } finally {

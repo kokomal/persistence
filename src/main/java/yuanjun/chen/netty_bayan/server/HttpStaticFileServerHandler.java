@@ -1,6 +1,5 @@
 package yuanjun.chen.netty_bayan.server;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;

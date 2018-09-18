@@ -10,9 +10,12 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.ssl.SslHandler;
@@ -49,26 +52,21 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
-        if (wsUri.equalsIgnoreCase(request.getUri())) {
+        if (wsUri.equalsIgnoreCase(request.uri())) {
             ctx.fireChannelRead(request.retain());                  //2
         } else {
-            if (HttpHeaders.is100ContinueExpected(request)) {
+            if (HttpUtil.is100ContinueExpected(request)) {
                 send100Continue(ctx);                               //3
             }
-
             RandomAccessFile file = new RandomAccessFile(INDEX, "r");//4
-
-            HttpResponse response = new DefaultHttpResponse(request.getProtocolVersion(), HttpResponseStatus.OK);
-            response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8");
-
-            boolean keepAlive = HttpHeaders.isKeepAlive(request);
-
+            HttpResponse response = new DefaultHttpResponse(request.protocolVersion(), HttpResponseStatus.OK);
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
+            boolean keepAlive = HttpUtil.isKeepAlive(request);
             if (keepAlive) {                                        //5
-                response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, file.length());
-                response.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                response.headers().set(HttpHeaderNames.CONTENT_LENGTH, file.length());
+                response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
             }
             ctx.write(response);                    //6
-
             if (ctx.pipeline().get(SslHandler.class) == null) {     //7
                 ctx.write(new DefaultFileRegion(file.getChannel(), 0, file.length()));
             } else {
@@ -78,7 +76,6 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
             if (!keepAlive) {
                 future.addListener(ChannelFutureListener.CLOSE);        //9
             }
-            
             file.close();
         }
     }

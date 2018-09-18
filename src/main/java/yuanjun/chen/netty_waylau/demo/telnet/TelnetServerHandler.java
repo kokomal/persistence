@@ -22,9 +22,6 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
         ctx.flush();
     }
 
-    public void messageReceived(ChannelHandlerContext ctx, String request) {
-    }
-
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();

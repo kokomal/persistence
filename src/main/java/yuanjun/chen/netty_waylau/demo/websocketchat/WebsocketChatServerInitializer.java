@@ -14,19 +14,18 @@ import io.netty.handler.stream.ChunkedWriteHandler;
  * @author waylau.com
  * @date 2015-3-13
  */
-public class WebsocketChatServerInitializer extends
-		ChannelInitializer<SocketChannel> {	//1
+public class WebsocketChatServerInitializer extends ChannelInitializer<SocketChannel> { // 1
 
-	@Override
-    public void initChannel(SocketChannel ch) throws Exception {//2
-		 ChannelPipeline pipeline = ch.pipeline();
+    @Override
+    public void initChannel(SocketChannel ch) throws Exception {// 2
+        ChannelPipeline pipeline = ch.pipeline();
 
         pipeline.addLast(new HttpServerCodec());
-		pipeline.addLast(new HttpObjectAggregator(64*1024));
-		pipeline.addLast(new ChunkedWriteHandler());
-		pipeline.addLast(new HttpRequestHandler("/ws"));
-		pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
-		pipeline.addLast(new TextWebSocketFrameHandler());
+        pipeline.addLast(new HttpObjectAggregator(64 * 1024));
+        pipeline.addLast(new ChunkedWriteHandler());
+        pipeline.addLast(new HttpRequestHandler("/ws"));
+        pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
+        pipeline.addLast(new TextWebSocketFrameHandler());
 
     }
 }

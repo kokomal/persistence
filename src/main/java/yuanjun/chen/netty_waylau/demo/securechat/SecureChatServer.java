@@ -7,6 +7,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 /**
@@ -18,7 +19,7 @@ public final class SecureChatServer {
 
     public static void main(String[] args) throws Exception {
         SelfSignedCertificate ssc = new SelfSignedCertificate();
-        SslContext sslCtx = SslContext.newServerContext(ssc.certificate(), ssc.privateKey());
+        SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();

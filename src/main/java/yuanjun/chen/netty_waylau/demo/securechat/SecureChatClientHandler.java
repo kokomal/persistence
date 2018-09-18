@@ -21,7 +21,6 @@ public class SecureChatClientHandler extends SimpleChannelInboundHandler<String>
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, String msg)
 			throws Exception {
-		// TODO Auto-generated method stub
-		
+	    System.err.println(msg);
 	}
 }

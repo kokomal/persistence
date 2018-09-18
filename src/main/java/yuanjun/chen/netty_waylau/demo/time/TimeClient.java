@@ -1,6 +1,8 @@
 package yuanjun.chen.netty_waylau.demo.time;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -11,10 +13,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class TimeClient {
 
-	public static void main(String[] args) throws Exception {
-		
-		String host = "127.0.0.1";// args[0];
-        int port = 8080;//Integer.parseInt(args[1]);
+    public static void main(String[] args) throws Exception {
+
+        String host = "127.0.0.1";// args[0];
+        int port = 8080;// Integer.parseInt(args[1]);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try {
@@ -28,14 +30,24 @@ public class TimeClient {
                     ch.pipeline().addLast(new TimeClientHandler());
                 }
             });
-
             // 启动客户端
             ChannelFuture f = b.connect(host, port).sync(); // (5)
-
+            boolean x = true;
+            int cc = 1;
+            while (x) {
+                cc++;
+                if (cc > 10) {
+                    cc = 1;
+                }
+                ByteBuf bb = Unpooled.buffer();
+                bb.writeBoolean(cc != 10);
+                f.channel().writeAndFlush(bb);
+                Thread.sleep(1000);
+            }
             // 等待连接关闭
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();
         }
-	}
+    }
 }
