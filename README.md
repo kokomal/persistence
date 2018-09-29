@@ -12,4 +12,4 @@ dao.mybatis包下实现了MyBatis的简易demo
 resources目录的mybatis_generator.properties和generatorConfig.xml是供（mybatis-generator-maven-plugin）逆向工程使用的配置文件  
 
 dao.jpa包下实现了SpringData Jpa的简易demo  
-@SpecialThanksTo Giau Ngo(https://github.com/giaunv, https://github.com/hellokoding 和 https://hellokoding.com/)的非常educative的教程  
+@SpecialThanksTo Giau Ngo(https://github.com/giaunv, https://github.com/hellokoding 和 https://hellokoding.com/ )的非常educative的教程  
