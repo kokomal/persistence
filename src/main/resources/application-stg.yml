@@ -1,0 +1,36 @@
+server:
+  port: 9922
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: 'true'
+        format_sql: 'true'
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect #指定InnoDB方言，否则默认是MyISAM
+        hbm2ddl:
+          auto: update #update代表会新建，也会更新，但不会删除表
+  datasource:
+    name: test
+    url: jdbc:mysql://127.0.0.1:3306/mytest?characterEncoding=utf8&useSSL=false
+    username: root
+    password: 1234
+    type: com.alibaba.druid.pool.DruidDataSource  #使用druid数据源
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+pagehelper: #pagehelper分页插件
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

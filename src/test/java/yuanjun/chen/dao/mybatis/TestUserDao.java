@@ -7,7 +7,7 @@
  * @version V1.0
  * @Copyright: 2018 All rights reserved.
  */
-package yuanjun.chen.dao;
+package yuanjun.chen.dao.mybatis;
 
 import java.util.List;
 import java.util.UUID;
