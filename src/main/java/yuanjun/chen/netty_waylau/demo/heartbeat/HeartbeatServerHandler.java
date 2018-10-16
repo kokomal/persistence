@@ -23,15 +23,14 @@ public class HeartbeatServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent event = (IdleStateEvent) evt;
             String type = "";
-            if (event.state() == IdleState.READER_IDLE) {
+            if (IdleState.READER_IDLE.equals(event.state())) {
                 type = "read idle";
-            } else if (event.state() == IdleState.WRITER_IDLE) {
+            } else if (IdleState.WRITER_IDLE.equals(event.state())) {
                 type = "write idle";
-            } else if (event.state() == IdleState.ALL_IDLE) {
+            } else if (IdleState.ALL_IDLE.equals(event.state())) {
                 type = "all idle";
             }
 

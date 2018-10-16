@@ -1,12 +1,16 @@
 package yuanjun.chen.netty_waylau.demo.websocketchat;
 
 
+import java.util.Random;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
@@ -15,6 +19,23 @@ import io.netty.util.concurrent.GlobalEventExecutor;
  * @author waylau.com 2015年3月26日
  */
 public class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            for (Channel channel : channels) {
+                Random rd = new Random();
+                int k = rd.nextInt(20);
+                if (k > 10) {
+                    channel.writeAndFlush(new TextWebSocketFrame("STOCK xxx is +10%!!!"));
+                } else {
+                    channel.writeAndFlush(new TextWebSocketFrame("STOCK xxx is -10%!!!"));
+                }
+            }
+        } else {
+            super.userEventTriggered(ctx, evt);
+        }
+    }
 
     public static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
