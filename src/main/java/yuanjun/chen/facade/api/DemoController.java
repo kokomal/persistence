@@ -7,7 +7,7 @@
  * @version V1.0
  * @Copyright: 2018 All rights reserved.
  */
-package yuanjun.chen.facade;
+package yuanjun.chen.facade.api;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
