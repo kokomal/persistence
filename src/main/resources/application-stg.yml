@@ -1,5 +1,14 @@
 server:
-  port: 9922
+  port: 8443
+  ssl:
+    key-store: classpath:keys/keystore.p12
+    key-store-password: letmein
+    key-password: letmein
+    key-store-type: PKCS12
+  security:
+    require-ssl: true
+    alias: tomcat
+    
 spring:
   jpa:
     properties:

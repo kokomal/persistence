@@ -1,5 +1,14 @@
-server: #这是专门为内存db设定的配置文件
-  port: 9933
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:keys/keystore.p12
+    key-store-password: letmein
+    key-password: letmein
+    key-store-type: PKCS12
+  security:
+    require-ssl: true
+    alias: tomcat
+    
 logging:
   level:
     root: INFO

@@ -24,10 +24,8 @@ import yuanjun.chen.dao.jpa.reading.ReadingListRepository;
  */
 @Controller
 @RequestMapping("/")
-@ConfigurationProperties("amazon")
 public class ReadingListController {
 
-    // private static final String reader = "craig";
     @Autowired
     private ReadingListRepository readingListRepository;
     @Autowired
@@ -44,6 +42,12 @@ public class ReadingListController {
         return "error";
     }
 
+    // 这个页面无需auth
+    @RequestMapping(value = "free", method = RequestMethod.GET)
+    public String free(Model model) {
+        return "free";
+    }
+    
     @RequestMapping(value = "readingList", method = RequestMethod.GET)
     public String readersBooks(Reader reader, Model model) {
         List<ReadingBook> readingList = readingListRepository.findByReader(reader);

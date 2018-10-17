@@ -33,7 +33,7 @@ public class PasswordEncoderTest {
     @Test
     public void encodePassword() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        //加密"0"
+        //加密"password"这个字符串
         String encode = bCryptPasswordEncoder.encode("password");
         System.out.println(encode);
     }
