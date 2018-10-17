@@ -9,9 +9,12 @@
  */
 package yuanjun.chen.config;
 
+import java.util.List;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import yuanjun.chen.dao.jpa.reading.ReaderHandlerMethodArgumentResolver;
 
 /**
  * @ClassName: WebConfig
@@ -25,5 +28,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addRedirectViewController("/", "/readingList"); // /直接重定向到readingList，如果注释掉那么访问localhost:9922/会404
+        registry.addViewController("/login").setViewName("login"); // 省略controller的login冗余代码
+    }
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(new ReaderHandlerMethodArgumentResolver()); // 非常重要的参数解析器，这样Reader就可以从model里面取出来解析成需要的pojo
     }
 }

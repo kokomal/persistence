@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class ReadingBook {
@@ -15,13 +16,14 @@ public class ReadingBook {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String reader;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Reader reader;
     private String isbn;
     private String title;
     private String author;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
+    //@Basic(fetch = FetchType.LAZY)
     @Column(name = " description", columnDefinition = "TEXT", nullable = true)
     private String description;
 
@@ -33,11 +35,11 @@ public class ReadingBook {
         this.id = id;
     }
 
-    public String getReader() {
+    public Reader getReader() {
         return reader;
     }
 
-    public void setReader(String reader) {
+    public void setReader(Reader reader) {
         this.reader = reader;
     }
 

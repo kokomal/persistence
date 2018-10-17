@@ -1,15 +1,12 @@
 package yuanjun.chen.netty_waylau.demo.websocketchat;
 
 
-import java.util.Random;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
@@ -24,13 +21,7 @@ public class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextW
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             for (Channel channel : channels) {
-                Random rd = new Random();
-                int k = rd.nextInt(20);
-                if (k > 10) {
-                    channel.writeAndFlush(new TextWebSocketFrame("STOCK xxx is +10%!!!"));
-                } else {
-                    channel.writeAndFlush(new TextWebSocketFrame("STOCK xxx is -10%!!!"));
-                }
+                channel.writeAndFlush(new TextWebSocketFrame("Normal HeartBeat"));
             }
         } else {
             super.userEventTriggered(ctx, evt);
@@ -41,6 +32,9 @@ public class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextW
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception { // (1)
+        WebsocketChatServer.ctx = ctx;
+        WebsocketChatServer.channels = channels; 
+        
         Channel incoming = ctx.channel();
         for (Channel channel : channels) {
             if (channel != incoming) {
@@ -91,6 +85,7 @@ public class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextW
         // 当出现异常就关闭连接
         cause.printStackTrace();
         ctx.close();
+        WebsocketChatServer.ctx = null;
     }
 
 }

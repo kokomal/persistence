@@ -1,11 +1,17 @@
 package yuanjun.chen.netty_waylau.demo.websocketchat;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
  * Websocket 聊天服务器-服务端
@@ -16,6 +22,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class WebsocketChatServer {
 
     private int port;
+    public static ChannelHandlerContext ctx = null; // 这里预留一个context
 
     public WebsocketChatServer(int port) {
         this.port = port;
@@ -34,7 +41,6 @@ public class WebsocketChatServer {
                     .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 
             System.out.println("WebsocketChatServer 启动了" + port);
-
             // 绑定端口，开始接收进来的连接
             ChannelFuture f = b.bind(port).sync(); // (7)
             // 等待服务器 socket 关闭 。
@@ -47,6 +53,8 @@ public class WebsocketChatServer {
         }
     }
 
+    public static ChannelGroup channels;
+
     public static void main(String[] args) throws Exception {
         int port;
         if (args.length > 0) {
@@ -54,6 +62,30 @@ public class WebsocketChatServer {
         } else {
             port = 8080;
         }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                    while (true) {
+                        if (channels != null) {
+                            for (Channel channel : channels) {
+                                if (channel.isWritable()) {
+                                    channel.writeAndFlush(new TextWebSocketFrame("STOCK xxx is +10%!!!"));
+                                } else {
+                                    System.out.println("no write");
+                                }
+                            }
+                            Thread.sleep(1000);
+                        } else {
+                            System.out.println("no channel");
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         new WebsocketChatServer(port).run();
     }
 }
