@@ -1,6 +1,7 @@
 package yuanjun.chen.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -27,14 +28,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/").access("hasRole('READER')").antMatchers("/readingList")
-                .access("hasRole('READER')").antMatchers("/**").permitAll().and().formLogin().loginPage("/login")
+        http.authorizeRequests()
+        .antMatchers("/").access("hasRole('READER')")
+        .antMatchers("/readingList").access("hasRole('READER')")
+        .antMatchers("/mgmt/**").access("hasRole('ADMIN')")
+        
+        .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
+        .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ADMIN") // 似乎2.0.4的boot又改动了，朝令夕改
+        
+        .antMatchers("/**").permitAll()
+        .and().formLogin().loginPage("/login")
                 .failureUrl("/login?error=true");
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(new BCryptPasswordEncoder()); // 添加password的encoder
+        auth.userDetailsService(userDetailsService()).passwordEncoder(new BCryptPasswordEncoder()).and()
+                .inMemoryAuthentication().passwordEncoder(passwordEncoder()).withUser("manager")
+                .password("password").roles("ADMIN", "READER"); // 添加password的encoder
     }
 
     @Bean("myUserDetailService") // 这个bean单独抽出来非常必要！因为集成测试要需要mock用户

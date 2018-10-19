@@ -34,6 +34,7 @@ import yuanjun.chen.dao.jpa.reading.ReaderRepository;
 import yuanjun.chen.dao.jpa.reading.ReadingBook;
 import yuanjun.chen.dao.jpa.reading.ReadingListRepository;
 import static org.hamcrest.Matchers.*;
+
 /**
  * @ClassName: MockMvcTest
  * @Description: TODO(这里用一句话描述这个类的作用)
@@ -43,7 +44,7 @@ import static org.hamcrest.Matchers.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = PersistenceApplication.class)
 @ActiveProfiles("stg")
-@WebAppConfiguration
+// @WebAppConfiguration
 public class MockMvcWithSecurityTest {
     @Autowired
     private WebApplicationContext webContext;
@@ -52,6 +53,7 @@ public class MockMvcWithSecurityTest {
 
     @Before
     public void setupMockMvc() {
+        System.out.println("=====BEFORE=====");
         mockMvc = MockMvcBuilders.webAppContextSetup(webContext).apply(springSecurity()).build();
     }
 
@@ -60,23 +62,32 @@ public class MockMvcWithSecurityTest {
         mockMvc.perform(get("/readingList")).andExpect(status().is3xxRedirection())
                 .andExpect(header().string("Location", "http://localhost/login"));
     }
-    
+
     @Autowired
     private ReaderRepository readerRepository;
     @Autowired
     private ReadingListRepository readingListRepository;
-    
+
     @Test
-    @WithMockUser(username="craig", password="password", roles="READER") // 账密传入
-    @WithUserDetails(value="craig", userDetailsServiceBeanName = "myUserDetailService") // 注意此处以craig用户登录
+    @WithUserDetails(value = "craig", userDetailsServiceBeanName = "myUserDetailService") // 注意此处以craig用户登录
     public void testCraig() throws Exception {
         Reader exp = readerRepository.getOne("craig");
         List<ReadingBook> readingList = readingListRepository.findByReader(exp);
         System.out.println("readingList size = " + readingList.size());
-        mockMvc.perform(get("/readingList"))
-        .andExpect(status().isOk())
-        .andExpect(view().name("readingList"))
-        .andExpect(model().attribute("reader", samePropertyValuesAs(exp)))
-        .andExpect(model().attribute("books", hasSize(readingList.size()))); // 目前有11条记录
+        mockMvc.perform(get("/readingList")).andExpect(status().isOk()).andExpect(view().name("readingList"))
+                .andExpect(model().attribute("reader", samePropertyValuesAs(exp)))
+                .andExpect(model().attribute("books", hasSize(readingList.size()))); // 目前有11条记录
+    }
+
+    @Test
+    @WithMockUser(username = "craig", password = "password", roles = "READER") // 鬼用户，无用户信息，适合渗透，此时Reader为null
+    public void testCraig2() throws Exception { // 必然resolveArgument解析为null，但无所谓
+        mockMvc.perform(get("/userX")).andExpect(status().isOk()); // 用mocker user的用意就是匿名，因此不要纠结用户为null
+    }
+
+    @Test
+    @WithUserDetails(value = "craig", userDetailsServiceBeanName = "myUserDetailService") // 真实用户，以@WithUserDetails里面的配置为准
+    public void testCraig3() throws Exception {
+        mockMvc.perform(get("/userX")).andExpect(status().isOk());
     }
 }

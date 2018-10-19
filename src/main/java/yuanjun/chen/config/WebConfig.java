@@ -27,7 +27,7 @@ import yuanjun.chen.dao.jpa.reading.ReaderHandlerMethodArgumentResolver;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addRedirectViewController("/", "/readingList"); // /直接重定向到readingList，如果注释掉那么访问localhost:9922/会404
+       // registry.addRedirectViewController("/", "/readingList"); // /直接重定向到readingList，如果注释掉那么访问localhost:9922/会404
         registry.addViewController("/login").setViewName("login"); // 省略controller的login冗余代码
     }
     @Override

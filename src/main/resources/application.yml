@@ -1,7 +1,7 @@
 spring:
   profiles:
     active: stg
-    
+
 error:
   whitelabel:
     enabled: false
@@ -13,3 +13,8 @@ logging:
   level:
     root: INFO
     
+management:
+  server:  
+    port: 8877
+    servlet:
+      context-path: /mgmt

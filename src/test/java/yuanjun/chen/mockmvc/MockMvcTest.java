@@ -53,9 +53,4 @@ public class MockMvcTest {
                     .andExpect(model().attributeDoesNotExist("haha"));
     }
     
-//    @Test
-//    public void testReadingList() throws Exception { // 无密可以直接访问
-//        mockMvc.perform(get("/readingList"))
-//            .andExpect(status().is4xxClientError());
-//    }
 }

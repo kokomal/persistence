@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,6 +58,12 @@ public class ReadingListController {
             model.addAttribute("amazonID", amazonConfig.getAssociateId());
         }
         return "readingList";
+    }
+    
+    @RequestMapping(value = "userX", method = RequestMethod.GET)
+    public String addToReadingListUser(Reader reader, Model model) {
+        System.out.println("I am free user" + reader);
+        return "free";
     }
 
     @RequestMapping(value = "readingList", method = RequestMethod.POST)
