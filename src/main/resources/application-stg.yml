@@ -13,7 +13,7 @@ spring:
   jpa:
     properties:
       hibernate:
-        show_sql: 'true'
+        show_sql: 'false'
         format_sql: 'true'
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect #指定InnoDB方言，否则默认是MyISAM
         hbm2ddl:
